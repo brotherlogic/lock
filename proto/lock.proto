@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package lock;
+
+option go_package = "github.com/brotherlogic/lock/proto";
+
+message Lock {
+  int64 acquire_time = 1;
+  int64 release_time = 2;
+  string key = 3;
+  string lock_key = 4;
+}
+
+message Locks {
+  repeated Lock locks = 1;
+}
+
+message AcquireLockRequest {
+  string key = 1;
+}
+
+message AcquireLockResponse {
+  Lock lock = 1;
+}
+
+message ReleaseLockRequest {
+  string key = 1;
+  string lock_key = 2;
+}
+
+message ReleaseLockResponse {}
+
+service LockService {
+  rpc AcquireLock (AcquireLockRequest) returns (AcquireLockResponse) {};
+  rpc ReleaseLock (ReleaseLockRequest) returns (ReleaseLockResponse) {};
+}
