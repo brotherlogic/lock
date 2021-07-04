@@ -24,6 +24,7 @@ func (s *Server) generateLockKey() string {
 
 func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*pb.AcquireLockResponse, error) {
 	conn, err := s.FDialServer(ctx, "dstore")
+	defer conn.Close()
 	if err != nil {
 		return nil, err
 	}
