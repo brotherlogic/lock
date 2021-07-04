@@ -54,7 +54,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 	for _, exLock := range locks.GetLocks() {
 		if exLock.GetKey() == req.GetKey() {
 			if exLock.GetReleaseTime() > lock.GetAcquireTime() {
-				return nil, status.Errorf(codes.AlreadyExists, "This key is locked")
+				return nil, status.Errorf(codes.AlreadyExists, "This key is locked until %v", time.Unix(exLock.GetReleaseTime(), 0))
 			}
 		} else {
 			nlocks = append(nlocks, exLock)
