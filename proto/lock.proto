@@ -7,7 +7,11 @@ option go_package = "github.com/brotherlogic/lock/proto";
 message Lock {
   int64 acquire_time = 1;
   int64 release_time = 2;
+
+  // User specified key
   string key = 3;
+
+  // Server generated key
   string lock_key = 4;
 }
 
@@ -17,6 +21,7 @@ message Locks {
 
 message AcquireLockRequest {
   string key = 1;
+  int64 lock_duration_in_seconds =2;
 }
 
 message AcquireLockResponse {

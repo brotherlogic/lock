@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/brotherlogic/discovery v0.0.0-20210626180714-1ae56396f4e1 // indirect
+	github.com/brotherlogic/dstore v0.0.0-20210703184730-3c3313a1712b
 	github.com/brotherlogic/gobuildslave v0.0.0-20210626211527-ff107a8a9b1d // indirect
 	github.com/brotherlogic/goserver v0.0.0-20210615034723-54a9e8564a59
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
