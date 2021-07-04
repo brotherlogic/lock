@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	KEY = "/github.com/brotherlogic/lock/locks"
+	KEY = "github.com/brotherlogic/lock/locks"
 )
 
 func (s *Server) generateLockKey() string {
