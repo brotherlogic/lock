@@ -30,11 +30,17 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 	client := dspb.NewDStoreServiceClient(conn)
 	rresp, err := client.Read(ctx, &dspb.ReadRequest{Key: KEY})
 	if err != nil {
-		return nil, err
+		if status.Convert(err).Code() != codes.NotFound {
+			return nil, err
+		}
 	}
 
 	locks := &pb.Locks{}
-	proto.Unmarshal(rresp.GetValue().GetValue(), locks)
+
+	//Only unmarshal if we actually read something
+	if status.Convert(err).Code() != codes.NotFound {
+		proto.Unmarshal(rresp.GetValue().GetValue(), locks)
+	}
 
 	lock := &pb.Lock{
 		AcquireTime: time.Now().Unix(),
