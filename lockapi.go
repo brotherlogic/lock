@@ -103,5 +103,55 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 }
 
 func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*pb.ReleaseLockResponse, error) {
-	return nil, fmt.Errorf("not implemetned")
+	conn, err := s.FDialServer(ctx, "dstore")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := dspb.NewDStoreServiceClient(conn)
+	rresp, err := client.Read(ctx, &dspb.ReadRequest{Key: KEY})
+	if err != nil {
+		return nil, err
+	}
+
+	locks := &pb.Locks{}
+
+	err = proto.Unmarshal(rresp.GetValue().GetValue(), locks)
+	if err != nil {
+		return nil, err
+	}
+
+	changed := false
+	var nlocks []*pb.Lock
+	for _, exLock := range locks.GetLocks() {
+		if exLock.GetKey() != req.GetKey() && exLock.GetLockKey() != req.GetLockKey() {
+			nlocks = append(nlocks, exLock)
+		} else {
+			changed = true
+		}
+	}
+	locks.Locks = nlocks
+
+	if changed {
+		data, err := proto.Marshal(locks)
+		if err != nil {
+			return nil, err
+		}
+
+		wresp, err := client.Write(ctx, &dspb.WriteRequest{
+			Key:   KEY,
+			Value: &anypb.Any{Value: data},
+		})
+
+		if err != nil {
+			return nil, err
+		}
+
+		if wresp.GetConsensus() < 1.0 {
+			return nil, fmt.Errorf("could not get consensus on write (%v)", wresp.GetConsensus())
+		}
+	}
+
+	return &pb.ReleaseLockResponse{}, nil
 }
