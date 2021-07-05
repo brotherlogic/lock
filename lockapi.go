@@ -55,7 +55,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		}
 	}
 
-	numlocks.Set(float64(len(locks)))
+	numlocks.Set(float64(len(locks.GetLocks())))
 
 	lock := &pb.Lock{
 		AcquireTime: time.Now().Unix(),
