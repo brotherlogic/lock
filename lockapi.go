@@ -12,10 +12,19 @@ import (
 
 	dspb "github.com/brotherlogic/dstore/proto"
 	pb "github.com/brotherlogic/lock/proto"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 )
 
 const (
 	KEY = "github.com/brotherlogic/lock/locks"
+)
+
+var (
+	numlocks = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "lock_numlocks",
+		Help: "The number of locks held",
+	})
 )
 
 func (s *Server) generateLockKey() string {
@@ -40,8 +49,13 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 
 	//Only unmarshal if we actually read something
 	if status.Convert(err).Code() != codes.NotFound {
-		proto.Unmarshal(rresp.GetValue().GetValue(), locks)
+		err = proto.Unmarshal(rresp.GetValue().GetValue(), locks)
+		if err != nil {
+			return nil, err
+		}
 	}
+
+	numlocks.Set(float64(len(locks)))
 
 	lock := &pb.Lock{
 		AcquireTime: time.Now().Unix(),
