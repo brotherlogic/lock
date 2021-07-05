@@ -23,7 +23,7 @@ const (
 var (
 	numlocks = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "lock_numlocks",
-		Help: "The number of locks held",
+		Help: "The number of locks held and stored",
 	})
 )
 
