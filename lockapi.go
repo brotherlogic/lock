@@ -55,6 +55,8 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		}
 	}
 
+	s.Log(fmt.Sprintf("CONVERSION: %v -> %v", err, locks))
+
 	numlocks.Set(float64(len(locks.GetLocks())))
 
 	lock := &pb.Lock{
