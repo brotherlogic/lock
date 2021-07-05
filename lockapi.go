@@ -58,7 +58,9 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 
 	s.Log(fmt.Sprintf("CONVERSION: %v -> %v", err, locks))
 
-	numlocks.Set(float64(len(locks.GetLocks())))
+	defer func() {
+		numlocks.Set(float64(len(locks.GetLocks())))
+	}()
 
 	lock := &pb.Lock{
 		AcquireTime: time.Now().Unix(),
@@ -116,6 +118,9 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 	}
 
 	locks := &pb.Locks{}
+	defer func() {
+		numlocks.Set(float64(len(locks.GetLocks())))
+	}()
 
 	err = proto.Unmarshal(rresp.GetValue().GetValue(), locks)
 	if err != nil {

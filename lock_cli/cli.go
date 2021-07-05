@@ -35,5 +35,8 @@ func main() {
 	case "acquire":
 		res, err := client.AcquireLock(ctx, &pb.AcquireLockRequest{Key: os.Args[2], LockDuration: int64(60 * 5)})
 		fmt.Printf("%v -> %v\n", res, err)
+	case "release":
+		res, err := client.ReleaseLock(ctx, &pb.ReleaseLockRequest{Key: os.Args[2], LockKey: os.Args[3]})
+		fmt.Printf("%v -> %v\n", res, err)
 	}
 }
