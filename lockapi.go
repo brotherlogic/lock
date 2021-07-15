@@ -64,7 +64,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 
 	lock := &pb.Lock{
 		AcquireTime: time.Now().Unix(),
-		ReleaseTime: time.Now().Unix() + req.GetLockDuration(),
+		ReleaseTime: time.Now().Unix() + req.GetLockDurationInSeconds(),
 		Key:         req.GetKey(),
 		LockKey:     s.generateLockKey(),
 	}

@@ -33,7 +33,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "acquire":
-		res, err := client.AcquireLock(ctx, &pb.AcquireLockRequest{Key: os.Args[2], LockDuration: int64(60 * 5)})
+		res, err := client.AcquireLock(ctx, &pb.AcquireLockRequest{Key: os.Args[2], LockDurationInSeconds: int64(60 * 5)})
 		fmt.Printf("%v -> %v\n", res, err)
 	case "release":
 		res, err := client.ReleaseLock(ctx, &pb.ReleaseLockRequest{Key: os.Args[2], LockKey: os.Args[3]})
