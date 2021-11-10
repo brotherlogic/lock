@@ -21,6 +21,7 @@ func Init() *Server {
 	s := &Server{
 		GoServer: &goserver.GoServer{},
 	}
+	s.NeedsLead = true
 	return s
 }
 
