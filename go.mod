@@ -6,7 +6,7 @@ require (
 	github.com/brotherlogic/buildserver v0.0.0-20211104233247-9d95ff5e1772 // indirect
 	github.com/brotherlogic/dstore v0.0.0-20211028192039-b11820344e93
 	github.com/brotherlogic/gobuildslave v0.0.0-20211102171726-78f189988066 // indirect
-	github.com/brotherlogic/goserver v0.0.0-20211110021647-05a010b55351
+	github.com/brotherlogic/goserver v0.0.0-20211110022449-f691421bf245
 	github.com/prometheus/client_golang v1.11.0
 	golang.org/x/net v0.0.0-20211109214657-ef0fda0de508
 	golang.org/x/sys v0.0.0-20211109184856-51b60fd695b3 // indirect
