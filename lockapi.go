@@ -26,6 +26,14 @@ var (
 		Name: "lock_numlocks",
 		Help: "The number of locks held and stored",
 	})
+	lockAcq = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "lock_lockAcq",
+		Help: "The number of locks held and stored",
+	}, []string{"type"})
+	lockRel = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "lock_lockRel",
+		Help: "The number of locks held and stored",
+	}, []string{"type"})
 )
 
 func (s *Server) generateLockKey() string {
@@ -33,6 +41,7 @@ func (s *Server) generateLockKey() string {
 }
 
 func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*pb.AcquireLockResponse, error) {
+	lockAcq.With(prometheus.Labels{"type": fmt.Sprintf("%v", s.LeadState)}).Inc()
 	switch s.LeadState {
 	case gpb.LeadState_FOLLOWER:
 		conn, err := s.FDial(fmt.Sprintf("%v:%v", s.CurrentLead, s.Registry.Port))
@@ -118,6 +127,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 }
 
 func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*pb.ReleaseLockResponse, error) {
+	lockRel.With(prometheus.Labels{"type": fmt.Sprintf("%v", s.LeadState)}).Inc()
 	switch s.LeadState {
 	case gpb.LeadState_FOLLOWER:
 		conn, err := s.FDial(fmt.Sprintf("%v:%v", s.CurrentLead, s.Registry.Port))
