@@ -53,7 +53,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		client := pb.NewLockServiceClient(conn)
 		return client.AcquireLock(ctx, req)
 	case gpb.LeadState_ELECTING:
-		return nil, fmt.Errorf("Currently electing a leader")
+		return nil, status.Errorf(codes.PermissionDenied, "Currently electing a leader")
 	}
 
 	conn, err := s.FDialServer(ctx, "dstore")
@@ -141,7 +141,7 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 		client := pb.NewLockServiceClient(conn)
 		return client.ReleaseLock(ctx, req)
 	case gpb.LeadState_ELECTING:
-		return nil, fmt.Errorf("Currently electing a leader")
+		return nil, status.Errorf(codes.PermissionDenied, "Currently electing a leader")
 	}
 
 	conn, err := s.FDialServer(ctx, "dstore")
