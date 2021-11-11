@@ -48,6 +48,8 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		if err != nil {
 			return nil, err
 		}
+		defer conn.Close()
+
 		client := pb.NewLockServiceClient(conn)
 		return client.AcquireLock(ctx, req)
 	case gpb.LeadState_ELECTING:
@@ -134,6 +136,8 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 		if err != nil {
 			return nil, err
 		}
+		defer conn.Close()
+
 		client := pb.NewLockServiceClient(conn)
 		return client.ReleaseLock(ctx, req)
 	case gpb.LeadState_ELECTING:
