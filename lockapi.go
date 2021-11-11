@@ -13,6 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 
 	dspb "github.com/brotherlogic/dstore/proto"
+	gpb "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/lock/proto"
 )
 
@@ -32,6 +33,18 @@ func (s *Server) generateLockKey() string {
 }
 
 func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*pb.AcquireLockResponse, error) {
+	switch s.LeadState {
+	case gpb.LeadState_FOLLOWER:
+		conn, err := s.FDial(fmt.Sprintf("%v:%v", s.CurrentLead, s.Registry.Port))
+		if err != nil {
+			return nil, err
+		}
+		client := pb.NewLockServiceClient(conn)
+		return client.AcquireLock(ctx, req)
+	case gpb.LeadState_ELECTING:
+		return nil, fmt.Errorf("Currently electing a leader")
+	}
+
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
 		return nil, err
@@ -105,6 +118,18 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 }
 
 func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*pb.ReleaseLockResponse, error) {
+	switch s.LeadState {
+	case gpb.LeadState_FOLLOWER:
+		conn, err := s.FDial(fmt.Sprintf("%v:%v", s.CurrentLead, s.Registry.Port))
+		if err != nil {
+			return nil, err
+		}
+		client := pb.NewLockServiceClient(conn)
+		return client.ReleaseLock(ctx, req)
+	case gpb.LeadState_ELECTING:
+		return nil, fmt.Errorf("Currently electing a leader")
+	}
+
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
 		return nil, err
