@@ -27,19 +27,19 @@ var (
 		Help: "The number of locks held and stored",
 	})
 	lockActAcq = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "lock_lockAcq",
+		Name: "lock_act_acq",
 		Help: "The number of locks held and stored",
 	})
 	lockAcq = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "lock_lock_act_acq",
+		Name: "lock_acq",
 		Help: "The number of locks held and stored",
 	}, []string{"type"})
 	lockActRel = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "lock_lock_act_rel",
+		Name: "lock_act_rel",
 		Help: "The number of locks held and stored",
 	})
 	lockRel = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "lock_lockRel",
+		Name: "lock_rel",
 		Help: "The number of locks held and stored",
 	}, []string{"type"})
 )
