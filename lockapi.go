@@ -131,7 +131,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 	}
 
 	if wresp.GetConsensus() < 1.0 {
-		return nil, fmt.Errorf("could not get consensus on write (%v)", wresp.GetConsensus())
+		return nil, status.Errorf(codes.FailedPrecondition, "could not get lock consensus on write (%v)", wresp.GetConsensus())
 	}
 
 	return &pb.AcquireLockResponse{Lock: lock}, nil
