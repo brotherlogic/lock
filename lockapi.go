@@ -26,10 +26,18 @@ var (
 		Name: "lock_numlocks",
 		Help: "The number of locks held and stored",
 	})
-	lockAcq = promauto.NewCounterVec(prometheus.CounterOpts{
+	lockActAcq = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "lock_lockAcq",
 		Help: "The number of locks held and stored",
+	})
+	lockAcq = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "lock_lock_act_acq",
+		Help: "The number of locks held and stored",
 	}, []string{"type"})
+	lockActRel = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "lock_lock_act_rel",
+		Help: "The number of locks held and stored",
+	})
 	lockRel = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "lock_lockRel",
 		Help: "The number of locks held and stored",
@@ -55,6 +63,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 	case gpb.LeadState_ELECTING:
 		return nil, status.Errorf(codes.PermissionDenied, "Currently electing a leader")
 	}
+	lockActAcq.Inc()
 
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
@@ -143,6 +152,7 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 	case gpb.LeadState_ELECTING:
 		return nil, status.Errorf(codes.PermissionDenied, "Currently electing a leader")
 	}
+	lockActRel.Inc()
 
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
