@@ -3,13 +3,12 @@ module github.com/brotherlogic/lock
 go 1.16
 
 require (
-	github.com/brotherlogic/dstore v0.0.0-20211028192039-b11820344e93
-	github.com/brotherlogic/gobuildslave v0.0.0-20211112165323-1714c0174da0 // indirect
-	github.com/brotherlogic/goserver v0.0.0-20211112231201-1506ef3e1155
+	github.com/brotherlogic/dstore v0.0.0-20211113001058-f00f117093ea
+	github.com/brotherlogic/gobuildslave v0.0.0-20211116221404-7ec75d0d3fb9 // indirect
+	github.com/brotherlogic/goserver v0.0.0-20211113203527-0c042db16f7a
 	github.com/prometheus/client_golang v1.11.0
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
-	golang.org/x/sys v0.0.0-20211112193437-faf0a1b62c6b // indirect
-	google.golang.org/genproto v0.0.0-20211112145013-271947fe86fd // indirect
+	golang.org/x/net v0.0.0-20211116231205-47ca1ff31462
+	google.golang.org/genproto v0.0.0-20211116182654-e63d96a377c4 // indirect
 	google.golang.org/grpc v1.42.0
 	google.golang.org/protobuf v1.27.1
 )
