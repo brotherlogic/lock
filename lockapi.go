@@ -50,7 +50,7 @@ func (s *Server) generateLockKey() string {
 
 func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*pb.AcquireLockResponse, error) {
 	lockAcq.With(prometheus.Labels{"type": fmt.Sprintf("%v", s.LeadState)}).Inc()
-	s.CtxLog(ctx, fmt.Sprintf("ACQUIRE LOCK %v -> %v", s.LeadState, s.CurrentLead))
+	s.CtxLog(ctx, fmt.Sprintf("ACQUIRE THE LOCK %v -> %v", s.LeadState, s.CurrentLead))
 	switch s.LeadState {
 	case gpb.LeadState_FOLLOWER:
 		conn, err := s.FDial(fmt.Sprintf("%v:%v", s.CurrentLead, s.Registry.Port))
