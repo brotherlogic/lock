@@ -66,6 +66,10 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 	}
 	lockActAcq.Inc()
 
+	// Lock for the main acquisition
+	s.mlock.Lock()
+	defer s.mlock.Unlock()
+
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
 		return nil, err

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/brotherlogic/goserver"
 	"golang.org/x/net/context"
@@ -14,12 +15,14 @@ import (
 //Server main server type
 type Server struct {
 	*goserver.GoServer
+	mlock *sync.Mutex
 }
 
 // Init builds the server
 func Init() *Server {
 	s := &Server{
 		GoServer: &goserver.GoServer{},
+		mlock:    &sync.Mutex{},
 	}
 	s.NeedsLead = true
 	return s
