@@ -42,6 +42,12 @@ var (
 		Name: "lock_rel",
 		Help: "The number of locks held and stored",
 	}, []string{"type"})
+
+	lockWait = promauto.NewHistogram(prometheus.HistogramOpts{
+		Name:    "lock_wait_time",
+		Help:    "The latency of server requests",
+		Buckets: []float64{.005 * 1000, .01 * 1000, .025 * 1000, .05 * 1000, .1 * 1000, .25 * 1000, .5 * 1000, 1 * 1000, 2.5 * 1000, 5 * 1000, 10 * 1000, 100 * 1000, 1000 * 1000},
+	})
 )
 
 func (s *Server) generateLockKey() string {
@@ -67,8 +73,10 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 	lockActAcq.Inc()
 
 	// Lock for the main acquisition
+	t := time.Now()
 	s.mlock.Lock()
 	defer s.mlock.Unlock()
+	lockWait.Observe(float64(time.Since(t).Milliseconds()))
 
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
