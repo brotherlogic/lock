@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -13,6 +12,5 @@ func (s *Server) runComputation(ctx context.Context) error {
 	for i := 0; i < 10000; i++ {
 		sum += i
 	}
-	s.Log(fmt.Sprintf("Sum the is %v -> %v", sum, time.Now().Sub(t).Nanoseconds()/1000000))
 	return nil
 }
