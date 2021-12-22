@@ -164,6 +164,10 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 	}
 	lockActRel.Inc()
 
+	// Also lock on release
+	s.mlock.Lock()
+	defer s.mlock.Unlock()
+
 	conn, err := s.FDialServer(ctx, "dstore")
 	if err != nil {
 		return nil, err
