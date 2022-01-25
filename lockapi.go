@@ -192,6 +192,7 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 
 	changed := false
 	var nlocks []*pb.Lock
+	las := len(locks.GetLocks())
 	for _, exLock := range locks.GetLocks() {
 		if exLock.GetKey() != req.GetKey() && exLock.GetLockKey() != req.GetLockKey() {
 			nlocks = append(nlocks, exLock)
@@ -200,6 +201,7 @@ func (s *Server) ReleaseLock(ctx context.Context, req *pb.ReleaseLockRequest) (*
 		}
 	}
 	locks.Locks = nlocks
+	s.CtxLog(ctx, fmt.Sprintf("For %v -> %v to %v (%v)", req, las, len(locks.GetLocks()), changed))
 
 	if changed {
 		data, err := proto.Marshal(locks)
