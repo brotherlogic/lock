@@ -91,6 +91,8 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		}
 	}
 
+	s.CtxLog(ctx, fmt.Sprintf("Read %v with %v", rresp.GetHash(), rresp.GetConsensus()))
+
 	locks := &pb.Locks{}
 
 	//Only unmarshal if we actually read something
@@ -135,6 +137,8 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		Key:   KEY,
 		Value: &anypb.Any{Value: data},
 	})
+
+	s.CtxLog(ctx, fmt.Sprintf("Written %v with %v", wresp.GetHash(), wresp.GetConsensus()))
 
 	if err != nil {
 		return nil, err
