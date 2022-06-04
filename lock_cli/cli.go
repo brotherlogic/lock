@@ -32,6 +32,9 @@ func main() {
 	client := pb.NewLockServiceClient(conn)
 
 	switch os.Args[1] {
+	case "probe":
+		res, err := client.ProbeLock(ctx, &pb.ProbeLockRequest{Key: os.Args[2]})
+		fmt.Printf("%v -> %v\n", res, err)
 	case "acquire":
 		res, err := client.AcquireLock(ctx, &pb.AcquireLockRequest{Key: os.Args[2], LockDurationInSeconds: int64(60 * 5)})
 		fmt.Printf("%v -> %v\n", res, err)
