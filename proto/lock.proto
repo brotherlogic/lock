@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package lock;
 
-import "github.com/protocolbuffers/protobuf/src/google/protobuf/any.proto";
-
 option go_package = "github.com/brotherlogic/lock/proto";
 
 message Lock {
@@ -15,6 +13,9 @@ message Lock {
 
   // Server generated key
   string lock_key = 4;
+
+  // Description of the purpose of the lock
+  string purpose = 5;
 }
 
 message Locks {
@@ -37,7 +38,16 @@ message ReleaseLockRequest {
 
 message ReleaseLockResponse {}
 
+message ProbeLockRequest {
+  string key = 1;
+}
+
+message ProbeLockResponse {
+  Lock lock = 1;
+}
+
 service LockService {
   rpc AcquireLock (AcquireLockRequest) returns (AcquireLockResponse) {};
   rpc ReleaseLock (ReleaseLockRequest) returns (ReleaseLockResponse) {};
+  rpc ProbeLock (ProbeLockRequest) returns (ProbeLockResponse) {};
 }

@@ -11,7 +11,6 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-// Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
 // LockServiceClient is the client API for LockService service.
@@ -20,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 type LockServiceClient interface {
 	AcquireLock(ctx context.Context, in *AcquireLockRequest, opts ...grpc.CallOption) (*AcquireLockResponse, error)
 	ReleaseLock(ctx context.Context, in *ReleaseLockRequest, opts ...grpc.CallOption) (*ReleaseLockResponse, error)
+	ProbeLock(ctx context.Context, in *ProbeLockRequest, opts ...grpc.CallOption) (*ProbeLockResponse, error)
 }
 
 type lockServiceClient struct {
@@ -48,12 +48,22 @@ func (c *lockServiceClient) ReleaseLock(ctx context.Context, in *ReleaseLockRequ
 	return out, nil
 }
 
+func (c *lockServiceClient) ProbeLock(ctx context.Context, in *ProbeLockRequest, opts ...grpc.CallOption) (*ProbeLockResponse, error) {
+	out := new(ProbeLockResponse)
+	err := c.cc.Invoke(ctx, "/lock.LockService/ProbeLock", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LockServiceServer is the server API for LockService service.
 // All implementations should embed UnimplementedLockServiceServer
 // for forward compatibility
 type LockServiceServer interface {
 	AcquireLock(context.Context, *AcquireLockRequest) (*AcquireLockResponse, error)
 	ReleaseLock(context.Context, *ReleaseLockRequest) (*ReleaseLockResponse, error)
+	ProbeLock(context.Context, *ProbeLockRequest) (*ProbeLockResponse, error)
 }
 
 // UnimplementedLockServiceServer should be embedded to have forward compatible implementations.
@@ -66,6 +76,9 @@ func (UnimplementedLockServiceServer) AcquireLock(context.Context, *AcquireLockR
 func (UnimplementedLockServiceServer) ReleaseLock(context.Context, *ReleaseLockRequest) (*ReleaseLockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReleaseLock not implemented")
 }
+func (UnimplementedLockServiceServer) ProbeLock(context.Context, *ProbeLockRequest) (*ProbeLockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProbeLock not implemented")
+}
 
 // UnsafeLockServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to LockServiceServer will
@@ -75,7 +88,7 @@ type UnsafeLockServiceServer interface {
 }
 
 func RegisterLockServiceServer(s grpc.ServiceRegistrar, srv LockServiceServer) {
-	s.RegisterService(&LockService_ServiceDesc, srv)
+	s.RegisterService(&_LockService_serviceDesc, srv)
 }
 
 func _LockService_AcquireLock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -114,10 +127,25 @@ func _LockService_ReleaseLock_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-// LockService_ServiceDesc is the grpc.ServiceDesc for LockService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var LockService_ServiceDesc = grpc.ServiceDesc{
+func _LockService_ProbeLock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProbeLockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LockServiceServer).ProbeLock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/lock.LockService/ProbeLock",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LockServiceServer).ProbeLock(ctx, req.(*ProbeLockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _LockService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "lock.LockService",
 	HandlerType: (*LockServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
@@ -128,6 +156,10 @@ var LockService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReleaseLock",
 			Handler:    _LockService_ReleaseLock_Handler,
+		},
+		{
+			MethodName: "ProbeLock",
+			Handler:    _LockService_ProbeLock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

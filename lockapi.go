@@ -54,6 +54,42 @@ func (s *Server) generateLockKey() string {
 	return fmt.Sprintf("%v-%v", s.Registry.Identifier, time.Now().UnixNano())
 }
 
+func (s *Server) ProbeLock(ctx context.Context, req *pb.ProbeLockRequest) (*pb.ProbeLockResponse, error) {
+	conn, err := s.FDialServer(ctx, "dstore")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := dspb.NewDStoreServiceClient(conn)
+	rresp, err := client.Read(ctx, &dspb.ReadRequest{Key: KEY})
+	if err != nil {
+		if status.Convert(err).Code() != codes.NotFound {
+			return nil, err
+		}
+	}
+
+	s.CtxLog(ctx, fmt.Sprintf("Read %v with %v", rresp.GetHash(), rresp.GetConsensus()))
+
+	locks := &pb.Locks{}
+
+	//Only unmarshal if we actually read something
+	if status.Convert(err).Code() != codes.NotFound {
+		err = proto.Unmarshal(rresp.GetValue().GetValue(), locks)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	for _, lock := range locks.GetLocks() {
+		if lock.GetKey() == req.GetKey() {
+			return &pb.ProbeLockResponse{Lock: lock}, nil
+		}
+	}
+
+	return nil, status.Errorf(codes.NotFound, "Could not find lock with key: %v", req.GetKey())
+}
+
 func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*pb.AcquireLockResponse, error) {
 	lockAcq.With(prometheus.Labels{"type": fmt.Sprintf("%v", s.LeadState)}).Inc()
 	switch s.LeadState {
