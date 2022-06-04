@@ -148,6 +148,7 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		ReleaseTime: time.Now().Unix() + req.GetLockDurationInSeconds(),
 		Key:         req.GetKey(),
 		LockKey:     s.generateLockKey(),
+		Purpose:     req.GetPurpose(),
 	}
 
 	// Check that we don't already have this lock
