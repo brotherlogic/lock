@@ -151,6 +151,8 @@ func (s *Server) AcquireLock(ctx context.Context, req *pb.AcquireLockRequest) (*
 		Purpose:     req.GetPurpose(),
 	}
 
+	s.CtxLog(ctx, fmt.Sprintf("Created lock: %v", lock))
+
 	// Check that we don't already have this lock
 	var nlocks []*pb.Lock
 	for _, exLock := range locks.GetLocks() {
