@@ -1,3 +1,3 @@
-# basicjob
-[![Coverage Status](https://coveralls.io/repos/github/brotherlogic/basicjob/badge.svg)](https://coveralls.io/github/brotherlogic/basicjob)
 # lock
+[![Coverage Status](https://coveralls.io/repos/github/brotherlogic/lock/badge.svg)](https://coveralls.io/github/brotherlogic/lock)
+
