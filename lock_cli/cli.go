@@ -9,16 +9,7 @@ import (
 	"github.com/brotherlogic/goserver/utils"
 
 	pb "github.com/brotherlogic/lock/proto"
-
-	//Needed to pull in gzip encoding init
-
-	_ "google.golang.org/grpc/encoding/gzip"
-	"google.golang.org/grpc/resolver"
 )
-
-func init() {
-	resolver.Register(&utils.DiscoveryClientResolverBuilder{})
-}
 
 func main() {
 	ctx, cancel := utils.ManualContext("lock-cli", time.Minute)
