@@ -4,8 +4,8 @@ go 1.16
 
 require (
 	github.com/brotherlogic/dstore v0.0.0-20230506015114-dcb7ded77d1a
-	github.com/brotherlogic/gobuildslave v0.0.0-20230507005414-c41cd856509a // indirect
 	github.com/brotherlogic/goserver v0.0.0-20230330215506-65bad61eb180
+	github.com/brotherlogic/keystore v0.0.0-20230508003843-b909de36bded // indirect
 	github.com/golang/protobuf v1.5.3
 	github.com/prometheus/client_golang v1.15.1
 	golang.org/x/net v0.9.0
