@@ -3,7 +3,7 @@ module github.com/brotherlogic/lock
 go 1.16
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20231127012344-5354935d2c3e // indirect
+	github.com/brotherlogic/datastore v0.0.0-20231127014402-eb6c2e0cb55d // indirect
 	github.com/brotherlogic/dstore v0.0.0-20231020041132-a9b977096542
 	github.com/brotherlogic/goserver v0.0.0-20230726200050-779ae6811580
 	github.com/golang/protobuf v1.5.3
