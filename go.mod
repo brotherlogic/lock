@@ -3,7 +3,7 @@ module github.com/brotherlogic/lock
 go 1.23.2
 
 require (
-	github.com/brotherlogic/dstore v0.0.0-20250611133316-f5fb4941a590
+	github.com/brotherlogic/dstore v0.0.0-20250611143348-134d669b8cde
 	github.com/brotherlogic/goserver v0.0.0-20250608182006-4ace595931a5
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.22.0
@@ -16,7 +16,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/brotherlogic/buildserver v0.0.0-20250611084550-7f8695164095 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250610012354-722a6beaa331 // indirect
-	github.com/brotherlogic/discovery v0.0.0-20250611124631-8ef9f2ff1ebb // indirect
+	github.com/brotherlogic/discovery v0.0.0-20250611135510-6ee926552c7d // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20250610012841-452c31c6d6aa // indirect
 	github.com/brotherlogic/githubridge v0.2865.0 // indirect
 	github.com/brotherlogic/gobuildslave v0.0.0-20250611041132-063762a80ea1 // indirect
